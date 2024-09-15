@@ -1,7 +1,7 @@
 <!-- Plugin Configuration File. Read more: https://plugins.jetbrains.com/docs/intellij/plugin-configuration-file.html -->
 <idea-plugin>
     <id>com.github.gwdgithubnom.intellijplatformdatadevelopment</id>
-    <name>intellij-platform-data-development Template</name>
+    <name>intellijplatformdatadevelopment Template</name>
     <vendor>gwdgithubnom</vendor>
 
     <depends>com.intellij.modules.platform</depends>
@@ -9,9 +9,40 @@
     <resource-bundle>messages.MyBundle</resource-bundle>
 
     <extensions defaultExtensionNs="com.intellij">
+        <projectConfigurable
+                groupId="tools"
+                key="foldableProjectView.name"
+                bundle="messages.MyBundle"
+                id="FoldableProjectViewConfigurable"
+                instance="com.github.gwdgithubnom.intellijplatformdatadevelopment.settings.FoldableProjectViewConfigurable"/>
+
+        <projectService
+                serviceImplementation="com.github.gwdgithubnom.intellijplatformdatadevelopment.settings.FoldableProjectSettings"/>
+
+        <treeStructureProvider
+                implementation="com.github.gwdgithubnom.intellijplatformdatadevelopment.projectView.FoldableTreeStructureProvider"/>
         <toolWindow factoryClass="com.github.gwdgithubnom.intellijplatformdatadevelopment.toolWindow.MyToolWindowFactory" id="MyToolWindow"/>
     </extensions>
-
+    <actions>
+        <action id="ProjectView.FoldRootFiles"
+                class="com.github.gwdgithubnom.intellijplatformdatadevelopment.actionSystem.FoldRootFilesAction"
+                text="Fold Root Files"
+                description="Action that lets you fold the files located in the root of your project">
+            <add-to-group
+                    group-id="ProjectView.ToolWindow.SecondaryActions"
+                    relative-to-action="ProjectView.FoldIgnoredFiles"
+                    anchor="before"/>
+        </action>
+        <action id="ProjectView.FoldIgnoredFiles"
+                class="com.github.gwdgithubnom.intellijplatformdatadevelopment.actionSystem.FoldIgnoredFilesAction"
+                text="Fold Ignored Files"
+                description="Action that lets you fold the ignored files">
+            <add-to-group
+                    group-id="ProjectView.ToolWindow.SecondaryActions"
+                    relative-to-action="ProjectView.FlattenPackages"
+                    anchor="before"/>
+        </action>
+    </actions>
     <applicationListeners>
         <listener class="com.github.gwdgithubnom.intellijplatformdatadevelopment.listeners.MyApplicationActivationListener" topic="com.intellij.openapi.application.ApplicationActivationListener"/>
     </applicationListeners>

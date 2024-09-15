@@ -1,5 +1,6 @@
 package com.github.gwdgithubnom.intellijplatformdatadevelopment
 
+import com.intellij.AbstractBundle
 import com.intellij.DynamicBundle
 import org.jetbrains.annotations.NonNls
 import org.jetbrains.annotations.PropertyKey
@@ -8,6 +9,7 @@ import org.jetbrains.annotations.PropertyKey
 private const val BUNDLE = "messages.MyBundle"
 
 object MyBundle : DynamicBundle(BUNDLE) {
+    //  : AbstractBundle("messages.MyBundle")
 
     @Suppress("SpreadOperator")
     @JvmStatic

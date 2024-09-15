@@ -6,11 +6,12 @@ fun environment(key: String) = providers.environmentVariable(key)
 
 plugins {
     id("java") // Java support
-    alias(libs.plugins.kotlin) // Kotlin support
-    alias(libs.plugins.gradleIntelliJPlugin) // Gradle IntelliJ Plugin
+    alias(libs.plugins.kotlin) // Kotlin support version "1.7.21"
+    alias(libs.plugins.gradleIntelliJPlugin) // Gradle IntelliJ Plugin id("org.jetbrains.intellij") version "1.10.0"
     alias(libs.plugins.changelog) // Gradle Changelog Plugin
     alias(libs.plugins.qodana) // Gradle Qodana Plugin
     alias(libs.plugins.kover) // Gradle Kover Plugin
+
 }
 
 group = properties("pluginGroup").get()
@@ -43,7 +44,7 @@ intellij {
 
 // Configure Gradle Changelog Plugin - read more: https://github.com/JetBrains/gradle-changelog-plugin
 changelog {
-    groups.empty()
+    groups.empty() //groups.set(emptyList())
     repositoryUrl = properties("pluginRepositoryUrl")
 }
 
@@ -63,6 +64,10 @@ koverReport {
         }
     }
 }
+//kover.xmlReport {
+//    onCheck.set(true)
+//}
+
 
 tasks {
     wrapper {
@@ -87,6 +92,19 @@ tasks {
             }
         }
 
+        // Extract the <!-- Plugin description --> section from README.md and provide for the plugin's manifest
+//        pluginDescription.set(
+//            file("README.md").readText().lines().run {
+//                val start = "<!-- Plugin description -->"
+//                val end = "<!-- Plugin description end -->"
+//
+//                if (!containsAll(listOf(start, end))) {
+//                    throw GradleException("Plugin description section not found in README.md:\n$start ... $end")
+//                }
+//                subList(indexOf(start) + 1, indexOf(end))
+//            }.joinToString("\n").let { markdownToHTML(it) }
+//        )
+
         val changelog = project.changelog // local variable for configuration cache compatibility
         // Get the latest available change notes from the changelog file
         changeNotes = properties("pluginVersion").map { pluginVersion ->
@@ -99,6 +117,14 @@ tasks {
                 )
             }
         }
+//        changeNotes.set(provider {
+//            with(changelog) {
+//                renderItem(
+//                    getOrNull(properties("pluginVersion")) ?: getLatest(),
+//                    Changelog.OutputType.HTML,
+//                )
+//            }
+//        })
     }
 
     // Configure UI tests plugin
